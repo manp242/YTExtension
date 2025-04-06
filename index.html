@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YT Transcript Chat</title>
+    <link rel="stylesheet" href="main.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>YT Transcript Chat</h1>
+        <button class="settings-button">⚙️</button>
+      </div>
+
+      <div class="video-info">
+        <div class="video-thumbnail">
+          <img src="/api/placeholder/80/45" alt="Video thumbnail" />
+        </div>
+        <div class="video-title">
+          How to Build Chrome Extensions - Complete Tutorial
+        </div>
+      </div>
+
+      <div class="chat-container">
+        <!-- <div class="message bot-message">
+          I've analyzed the transcript of this video. Ask me anything about it!
+        </div>
+
+        <div class="message user-message">
+          What are the main topics covered in this video?
+        </div>
+
+        <div class="message bot-message">
+          This tutorial covers the fundamentals of Chrome extension development
+          including manifest.json setup, content scripts, background scripts,
+          and how to interact with the YouTube API to extract video data.
+        </div>
+
+        <div class="message user-message">
+          Can you summarize the key points about manifest.json?
+        </div> -->
+
+        <!-- <div class="message bot-thinking">
+          <div class="thinking-dot"></div>
+          <div class="thinking-dot"></div>
+          <div class="thinking-dot"></div>
+        </div> -->
+      </div>
+
+      <div class="input-container">
+        <textarea
+          class="input-field"
+          placeholder="Ask about this video..."
+        ></textarea>
+        <button class="send-button">➤</button>
+      </div>
+    </div>
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

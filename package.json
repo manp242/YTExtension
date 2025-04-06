@@ -1,0 +1,11 @@
+{
+  "name": "youtube-extension",
+  "version": "1.0.0",
+  "description": "Ask questions about YouTube videos",
+  "author": "Disha",
+  "license": "MIT",
+  "scripts": {},
+  "dependencies": {
+    "youtube-captions-scraper": "^2.0.3"
+  }
+}
