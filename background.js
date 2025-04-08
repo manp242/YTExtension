@@ -15,7 +15,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return true; // Keep the message channel open for async response
   }
 });
-
 async function getTranscriptFromYouTube(videoUrl) {
   const videoId = new URLSearchParams(new URL(videoUrl).search).get("v");
 
