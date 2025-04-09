@@ -3,9 +3,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
       //gets current tab url
       const videoUrl = tabs[0].url;
+      const videoId = new URLSearchParams(new URL(videoUrl).search).get("v");
       try {
         const transcript = await getTranscriptFromYouTube(videoUrl);
-        sendResponse({ transcript });
+        sendResponse({
+          transcript: transcript[0],
+          videoId,
+          api: transcript[1],
+        });
       } catch (err) {
         console.error("Transcript error:", err);
         sendResponse({ transcript: "Error fetching transcript." });
@@ -23,5 +28,5 @@ async function getTranscriptFromYouTube(videoUrl) {
   );
   const data = await response.json();
 
-  return data.transcript || "Transcript not found.";
+  return [data.transcript, data.api] || "Transcript not found.";
 }

@@ -1,6 +1,8 @@
 const inp = document.querySelector(".input-field");
 const btn = document.querySelector(".send-button");
 const chat = document.querySelector(".chat-container");
+let thumbnailPic = document.querySelector(".thumbnailPic");
+let title = document.querySelector(".video-title");
 
 async function getGptResponse(transcript, question) {
   try {
@@ -13,11 +15,6 @@ async function getGptResponse(transcript, question) {
     });
 
     const data = await res.json();
-
-    chat.insertAdjacentHTML(
-      "beforeend",
-      `<div class="message user-message">${data.response}</div>`
-    );
     return data.response;
   } catch (error) {
     console.error("Error fetching GPT response:", error);
@@ -36,20 +33,29 @@ btn.addEventListener("click", async () => {
   await chrome.runtime.sendMessage(
     { type: "GET_TRANSCRIPT" },
     async (response) => {
-      if (response && response.transcript) {
-        transcript = response.transcript;
-        const gptReply = await getGptResponse(transcript, question);
-        const replyHtml = `<div class="message bot-message">${gptReply}</div>`;
+      if (response.transcript && response.videoId) {
+        const newThumbnailUrl = `https://img.youtube.com/vi/${response.videoId}/maxresdefault.jpg`;
+        if (thumbnailPic) {
+          inp.value = "";
+          thumbnailPic.src = newThumbnailUrl;
+          const titleData = await fetch(
+            `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${response.videoId}&key=AIzaSyBR_8f8q3QvKO3Y8U7OV6SbHzKOgGyYnC0`
+          ).then((res) => res.json());
+
+          title.innerText =
+            titleData.items[0]?.snippet?.title || "Unknown title";
+        }
+
+        const gptReply = await getGptResponse(response.transcript, question);
+        const replyHtml = `
+        <div class="message bot-message">${gptReply}</div>`;
         chat.insertAdjacentHTML("beforeend", replyHtml);
-      } else {
-        chat.insertAdjacentHTML(
-          "beforeend",
-          `<div class="message bot-message">Failed to get transcript.</div>`
-        );
+        return;
       }
+      chat.insertAdjacentHTML(
+        "beforeend",
+        `<div class="message bot-message">Failed to get transcript.</div>`
+      );
     }
   );
-  // console.log(transcript);
-
-  ///// send transcipt and question to chatgpt
 });

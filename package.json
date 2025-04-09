@@ -2,9 +2,11 @@
   "name": "youtube-extension",
   "version": "1.0.0",
   "description": "Ask questions about YouTube videos",
-  "author": "Disha",
+  "author": "Mann",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "devnode": "index.js"
+  },
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^5.1.0",

@@ -185,3 +185,6 @@ body {
   cursor: pointer;
   font-size: 16px;
 }
+.thumbnailPic {
+  width: 100%;
+}

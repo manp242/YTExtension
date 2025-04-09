@@ -1,15 +1,26 @@
 const express = require("express");
 const cors = require("cors");
 const { getSubtitles } = require("youtube-captions-scraper");
-
+require("dotenv").config();
 const OpenAI = require("openai");
+
+// Check if API key exists
+if (!process.env.OPENAI_API_KEY) {
+  console.error("ERROR: OPENAI_API_KEY environment variable is missing!");
+  console.error(
+    "Please create a .env file in your project root with: OPENAI_API_KEY=your_api_key_here"
+  );
+  process.exit(1);
+}
+
 const client = new OpenAI({
-  apiKey: process.env.OPEN,
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 const app = express();
 const PORT = 3000;
 
+app.use(cors());
 app.use(express.json());
 
 app.get("/transcript", async (req, res) => {
@@ -41,11 +52,10 @@ app.post("/res", async (req, res) => {
       messages: [
         {
           role: "user",
-          content: `Based on the transcript, answer this in 15–20 words max.\n\nQuestion: ${question}\n\nTranscript: ${transcript}`,
+          content: `Transcript: ${transcript}. Question: ${question} in 15-20 words`,
         },
       ],
     });
-
     res.json({ response: response.choices[0].message.content });
   } catch (err) {
     console.error("Error from OpenAI:", err.message);
