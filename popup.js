@@ -21,30 +21,25 @@ async function getGptResponse(transcript, question) {
     return "Sorry, something went wrong with ChatGPT.";
   }
 }
+
 btn.addEventListener("click", async () => {
   const question = inp.value;
-  let transcript = "";
-
+  inp.value = "";
   // Add user's question to chat
   const html = `<div class="message user-message">${question}</div>`;
   chat.insertAdjacentHTML("beforeend", html);
 
-  // Send message to background to get transcript from current tab
+  // Send message to background to get transcript from current tab using an external library
   await chrome.runtime.sendMessage(
     { type: "GET_TRANSCRIPT" },
     async (response) => {
-      if (response.transcript && response.videoId) {
-        const newThumbnailUrl = `https://img.youtube.com/vi/${response.videoId}/maxresdefault.jpg`;
-        if (thumbnailPic) {
-          inp.value = "";
-          thumbnailPic.src = newThumbnailUrl;
-          const titleData = await fetch(
-            `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${response.videoId}&key=AIzaSyBR_8f8q3QvKO3Y8U7OV6SbHzKOgGyYnC0`
-          ).then((res) => res.json());
-
-          title.innerText =
-            titleData.items[0]?.snippet?.title || "Unknown title";
-        }
+      if (response.transcript && response.api && response.videoId) {
+        const titleData = await fetch(
+          `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${response.videoId}&key=${response.api}`
+        ).then((res) => res.json());
+        thumbnailPic.src = `https://img.youtbe.com/vi/${response.videoId}/maxresdefault.jpg`;
+        console.log(thumbnailPic.src);
+        title.innerText = titleData.items[0]?.snippet?.title || "Unknown title";
 
         const gptReply = await getGptResponse(response.transcript, question);
         const replyHtml = `

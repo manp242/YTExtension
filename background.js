@@ -1,15 +1,17 @@
+// background.js
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.type === "GET_TRANSCRIPT") {
     chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
-      //gets current tab url
       const videoUrl = tabs[0].url;
       const videoId = new URLSearchParams(new URL(videoUrl).search).get("v");
+
       try {
-        const transcript = await getTranscriptFromYouTube(videoUrl);
+        const { transcript, api } = await getTranscriptFromYouTube(videoId);
         sendResponse({
-          transcript: transcript[0],
+          transcript,
           videoId,
-          api: transcript[1],
+          api,
         });
       } catch (err) {
         console.error("Transcript error:", err);
@@ -17,16 +19,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       }
     });
 
-    return true; // Keep the message channel open for async response
+    return true;
   }
 });
-async function getTranscriptFromYouTube(videoUrl) {
-  const videoId = new URLSearchParams(new URL(videoUrl).search).get("v");
 
+async function getTranscriptFromYouTube(videoId) {
   const response = await fetch(
     `http://localhost:3000/transcript?videoId=${videoId}`
   );
   const data = await response.json();
 
-  return [data.transcript, data.api] || "Transcript not found.";
+  return { transcript: data.transcript, api: data.api };
 }

@@ -32,7 +32,7 @@ app.get("/transcript", async (req, res) => {
   try {
     const captions = await getSubtitles({ videoID: videoId, lang: "en" });
     const transcript = captions.map((cap) => cap.text).join(" ");
-    res.json({ transcript });
+    res.json({ transcript, videoId, api: process.env.YAPI });
   } catch (err) {
     console.error("Error fetching captions:", err.message);
     res.status(500).json({ error: "Failed to fetch captions." });
@@ -48,7 +48,7 @@ app.post("/res", async (req, res) => {
 
   try {
     const response = await client.chat.completions.create({
-      model: "gpt-4o",
+      model: "gpt-4o-mini",
       messages: [
         {
           role: "user",
@@ -62,7 +62,6 @@ app.post("/res", async (req, res) => {
     res.status(500).json({ error: "Failed to get GPT response." });
   }
 });
-
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
