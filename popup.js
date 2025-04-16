@@ -34,11 +34,10 @@ btn.addEventListener("click", async () => {
     { type: "GET_TRANSCRIPT" },
     async (response) => {
       if (response.transcript && response.api && response.videoId) {
+        thumbnailPic.src = `https://img.youtube.com/vi/${response.videoId}/maxresdefault.jpg`;
         const titleData = await fetch(
           `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${response.videoId}&key=${response.api}`
         ).then((res) => res.json());
-        thumbnailPic.src = `https://img.youtbe.com/vi/${response.videoId}/maxresdefault.jpg`;
-        console.log(thumbnailPic.src);
         title.innerText = titleData.items[0]?.snippet?.title || "Unknown title";
 
         const gptReply = await getGptResponse(response.transcript, question);
